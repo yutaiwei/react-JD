@@ -1,65 +1,60 @@
 import './header.css';
-import '../../lib/swiper.min.css';
 import React from 'react';
-import Swiper from '../../lib/swiper.min.js'
+import '../../lib/swiper.min.css';
+import Swiper from '../../lib/swiper.min';
 import fetchJsonp from 'fetch-jsonp';
 
-let Header = React.createClass({
-	getInitialState: function() {
-        return {
-        	imgUrls: [],
-        };
- 	},
-	componentDidMount: function() {
-		fetchJsonp(this.props.source).then((response) => {
-			return response.json();
-		}).then((data) => {
+export default class Header extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			imgUrls: []
+		}
+	}
 
-			if(data.status) {
-				//如果组件渲染到了 DOM 中，isMounted() 返回 true。
-				//可以使用该方法保证 setState() 和 forceUpdate()
-				//在异步场景下的调用不会出错。
-				if(this.isMounted()) {
+	componentDidMount() {
+		fetchJsonp(this.props.source).then((response)=> {
+			return response.json()
+		}).then((data)=> {
+			if (data.status) {
+
 					this.setState({
 						imgUrls: data.data,
 					})
-				    new Swiper ('#header .swiper-container', {
-					    loop: true,
-					    pagination: '.swiper-pagination',
-					    paginationClickable: true,
-					    autoplay : 3000,
-						autoplayDisableOnInteraction : false,
+					new Swiper('#header .swiper-container',{
+						loop:true,
+						pagination:'.swiper-pagination',
+						paginationClickable:true,
+						autoplay:2000,
+						autoplayDisableOnInteraction:false
 					})
-				}
-			}else {
-				alert(data.msg);
+
+			} else {
+				alter(data.msg)
 			}
 		})
-	},
+	}
 
-	render: function () {
+	render() {
 		let countId = 0;
-	    return (
-	      <div id="header">
-    		<div className="swiper-container">
-			    <div className="swiper-wrapper">
-			    	{
-			    		this.state.imgUrls.map((url) => {
-			    			return <div className="swiper-slide" key={"header" + countId++} >
-			    						<img className="img" src={url} />
-			    				   </div>
-			    		})
-			    	}
-			    </div>
-				<div className="swiper-pagination"></div>
+		return (
+			<div id="header">
+				<div className="swiper-container">
+					<div className="swiper-wrapper">
+						{
+							this.state.imgUrls.map((url, index)=> {
+								return <div className="swiper-slide" key={index}>
+									<img className="img" src={url}/>
+								</div>
+							})
+						}
+					</div>
+					<div className="swiper-pagination"></div>
+				</div>
 			</div>
-	      </div>
-	    );
-	  }
-})
-
-Header.propTypes = {
-    source: React.PropTypes.string.isRequired,
+		)
+	}
 }
-module.exports = Header;
-
+Header.propTypes = {
+	source: React.PropTypes.string.isRequired,
+}

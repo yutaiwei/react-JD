@@ -16,7 +16,7 @@ img {
 }
 
 .more_link:last-child {
-	border-right: 0;
+	border-right: 0px;
 }
 
 .more_top:after, .more_middle:after, .more_bottom:after{
